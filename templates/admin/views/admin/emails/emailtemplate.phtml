@@ -1,0 +1,122 @@
+<table cellpadding="5" cellspacing="0">
+    <tr>
+        <td>
+            <label class="fieldlabel"><?php echo $this->user->lang("Email Name");?></label>
+            <input class="required" type="text" style="width:305px;margin-right:17px;" name="emailName" style="padding-right:20px;" value="<?php echo $this->name;?>" <?php echo ($this->caneditname) ? "":'disabled="disabled"';?> />
+        </td>
+        <td colspan="2">
+            <label class="fieldlabel"><?php echo $this->user->lang("Type");?></label>
+            <select id="emailTypeId" name="emailTypeId" <?php if ( $this->emailId != 0 ) { ?> disabled="disabled" <?php } ?>>
+            <?php foreach ( $this->emailTypes as $id => $type ) { echo $this->type." ".$id; ?>
+                <option value="<?php echo $id; ?>" <?php echo ($this->type == $id) ? "selected" : "";?>><?php echo $type;?></option>
+            <?php } ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <label class="fieldlabel"><?php echo $this->user->lang("Email Subject");?></label>
+            <input class="required" type="text" name="emailSubject" style="width:305px;" value="<?php echo $this->subject; ?>" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <div id="emailCustomTag"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <textarea id="textarea_content" name="emailContent" class="wysihtml5 required" data-clips-id="article-content-textarea-clips" style="height: 200px;"><?php echo $this->content;?></textarea>
+        </td>
+    </tr>
+</table>
+
+<input type="hidden" name="emailId" id="emailId" value="<?php echo $this->emailId; ?>" />
+
+<script type="text/javascript">
+    var emailTypeId = <?php echo $this->type; ?>;
+    var welcomeEmailClips = false;
+    
+    emailtemplate = {};
+
+    emailtemplate.handlehelpid = function(emailTypeId)
+    {
+        if ( emailTypeId == 1 || emailTypeId == 2) {
+            $('.redactor_btn_clips').hide();
+        } else if (emailTypeId == 8) { //hosting
+            $('#article-content-textarea-clips').attr('id','article-content-textarea-clips_default');
+            $('#article-content-textarea-welcome-email').attr('id','article-content-textarea-clips');
+            welcomeEmailClips = true;
+            $('.redactor_btn_clips').show();
+        } else if (emailTypeId == 9) { //notifications
+            if(welcomeEmailClips){
+                $('#article-content-textarea-clips').attr('id','article-content-textarea-welcome-email');
+                $('#article-content-textarea-clips_default').attr('id','article-content-textarea-clips');
+                welcomeEmailClips = false;
+            }
+            $('.redactor_btn_clips').show();
+        }
+    };
+
+    $(document).ready(function(){
+        clientexec.postpageload('.richwindow');
+        if ( emailTypeId == 1 || emailTypeId == 2) {
+            $('.redactor_btn_clips').hide();
+        }
+
+        $('#emailTypeId').on('click',function(){
+            emailtemplate.handlehelpid($('#emailTypeId').val());
+        });
+    });
+
+</script>
+
+<?php if (count($this->emailTagsAvailableWelcomeEmail) > 0) { ?>
+    <div id="article-content-textarea-welcome-email" style="display: none;">
+        <div class="redactor_modal_box">
+            <ul class="redactor_clips_box">
+                <?php foreach($this->emailTagsAvailableWelcomeEmail['tags'] as $tag) { ?>
+                    <li>
+                        <a href="#" class="redactor_clip_link"><?php echo $tag->description;?></a>
+                        <div class="redactor_clip" style="display: none;">
+                                [<?php echo $tag->name;?>]
+                        </div>
+                    </li>
+                <?php }?>
+            </ul>
+        </div>
+        <div id="redactor_modal_footer">
+            <span class="redactor_btns_box">
+                <a href="javascript:void(null);" class="redactor_btn_modal_close">Close</a>
+            </span>
+        </div>
+    </div>
+<?php } ?>
+
+<!-- custom tags available for this template -->
+<?php if (count($this->emailTagsAvailable) > 0) { ?>
+<div id="article-content-textarea-clips" style="display: none;">
+    <div class="redactor_modal_box">
+        <ul class="redactor_clips_box">
+            <?php foreach($this->emailTagsAvailable['tags'] as $tag) { ?>
+                <li>
+                    <a href="#" class="redactor_clip_link"><?php echo $tag->description;?></a>
+                    <div class="redactor_clip" style="display: none;">
+                            [<?php echo $tag->name;?>]
+                    </div>
+                </li>
+            <?php }?>
+        </ul>
+    </div>
+    <div id="redactor_modal_footer">
+        <span class="redactor_btns_box">
+            <a href="javascript:void(null);" class="redactor_btn_modal_close">Close</a>
+        </span>
+    </div>
+</div>
+<?php } ?>
+
+<div id="article-content-textarea-clips" style="display:none">
+    <div class="redactor_modal_box"></div>
+</div>
+

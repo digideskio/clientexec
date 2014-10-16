@@ -1,0 +1,1 @@
+$(document).ready(function(){$('.accordion-toggle').click(function(e){$('#faq-accordion').find('[data-toggle=collapse]').addClass('collapsed');});});

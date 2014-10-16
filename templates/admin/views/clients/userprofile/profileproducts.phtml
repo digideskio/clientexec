@@ -1,0 +1,24 @@
+<?php echo $this->profileheader($this->customer);?>
+
+<script type="text/javascript">
+    var userpackages = userpackages || {};
+    userpackages.config = {
+        customFields: <?php echo html_entity_decode($this->customfields) ?>
+    }
+</script>
+
+<span class="grid-meta" id="domains-grid-metadata"></span>
+<div id="gridheader" class="blue-box">
+    <table width="100%">
+    <tr>
+        <td>
+            <button id="addproductbutton" class="rich-button"><span><?php echo $this->user->lang("Add package");?></span></button>
+        </td>
+    </tr>
+    </table>
+</div>
+<div id="domains-grid"></div>
+<div id="domains-grid-footer" style="display:none;">
+    <button class="btn rich-button btn-delete-products"><span><?php echo $this->user->lang("Delete packages(s)");?></span></button>
+    <button class="btn rich-button btn-welcome-email"><span><?php echo $this->user->lang("Send welcome email");?></span></button>
+</div>

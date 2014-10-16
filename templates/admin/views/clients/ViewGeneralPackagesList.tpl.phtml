@@ -1,0 +1,26 @@
+<span class="grid-meta" id="domains-grid-metadata"></span>
+<div class="blue-box" style="padding:4px !important;">
+    <table class="automation" width="100%">
+        <tbody>
+            <tr>
+                <td align="right"><?php echo $this->user->lang('Package Type Filter'); ?>:&nbsp;</td>
+                <td align="left" width="50">
+                    <select onchange="togglePackageListType(this.options[this.selectedIndex].value);">
+                        <option value="domain">Domain Packages</option>
+                        <option value="hosting">Hosting Packages</option>
+                        <option value="general" selected="selected">General Packages</option>
+                    </select>
+                </td>
+                <td align="right" width="110"><?php echo $this->user->lang('Package Filter'); ?>:&nbsp;</td>
+                <td align="left" width="80">
+                    <input type="text" id="domainsfilter" size="50"/>
+                </td>
+                <td align="right" style="width:80px"><?php echo $this->user->lang('Display'); ?>: &nbsp;&nbsp;</td>
+                <td align="left" style="width:60px">
+                    <input type="text" id="local-states-with-qtip" size="20"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="domains-grid"></div>

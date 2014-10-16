@@ -1,0 +1,15 @@
+<h2>Account Notes</h2>
+<table>
+	<?php foreach ( $this->notes as $note ) { ?>
+	<tr>
+		<td>Submitted:</td>
+		<td><?php echo $note['authorAndDate']; ?></td>
+	</tr>
+	<tr>
+		<td colspan="2"><?php echo nl2br($this->escape($note['content'])) ?></td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<?php } ?>
+</table>

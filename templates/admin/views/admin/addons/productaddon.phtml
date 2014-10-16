@@ -1,0 +1,214 @@
+<script type="text/javascript">
+    productaddon = {};
+    productaddon.id = <?php echo $this->productaddonid;?>;
+    productaddon.grouptype = <?php echo $this->grouptype;?>;
+    productaddon.pluginvar = "<?php echo $this->pluginvar;?>";
+    <?php
+        $js_array = json_encode($this->productgroups);
+        echo "productaddon.productgroups = ". $js_array . ";\n";
+    ?>
+</script>
+
+<div class="alert alert-info">
+  <div class="alert-header"><?php echo $this->user->lang('Product Addon'); ?></div>
+  <p class="alert-content"><?php echo $this->user->lang('Addons are additional services/product addons that can be attached to product orders.'); ?></p>
+</div>
+
+<div style="margin-top:-8px;margin-bottom:10px;"><i class="icon-level-up icon-flip-horizontal icon-back-to-parent-list"></i> <a href="index.php?fuse=admin&controller=addons&view=productaddons"><?php echo $this->user->lang("Addon list");?></a></div>
+
+<div class="fieldwrapper withcolor">
+    <form id="addondata">
+    <label><?php echo $this->user->lang("Name of Addon");?></label>
+    <input class="required" type="text" style="width:500px;" name="product-addon-name" value="<?php echo $this->addonName;?>" />
+
+    <label style="margin-top:15px;"><span class='tip-target' data-toggle="tooltip" data-placement='right' title='Select which products groups this addon is available to.  Assigning product groups helps in managing addon selection in the product edit screen as it limits only addons that are applicable to your product.'><?php echo $this->user->lang("Available To Product Groups");?></span></label>
+    <select multiple="multiple" placeholder="Select product group(s)" id="product-groups" name="product-groups[]" style="width:100%;display:none;" class="disableSelect2AutoLoad" id="product-groups">
+        <?php
+            foreach ($this->productgroups as $key=>$cat) {
+                echo "<optgroup value='0' data-grouptype='".$cat[0]['typeid']."'  label='Groups of type: ".$key."'>";
+                foreach($cat as $productgroup)
+                {
+                    $selected = (in_array($productgroup['id'],$this->productgroup_ids)) ? "selected" : "";
+                    echo "<option ".$selected." value='".$productgroup['id']."'>".$productgroup['name']."</option>";
+                }
+                echo "</optgroup>";
+            }
+        ?>
+    </select>
+    <br/>
+    <label style="margin-top:15px;"><span class='tip-target'  data-placement='right' data-toggle="tooltip" title='Visible to customers during the order process.'><?php echo $this->user->lang("Addon description");?></span></label>
+    <textarea class="wysihtml5" name="product-addon-description" style='height:70px;display:none;'><?php echo $this->description;?></textarea>
+
+    <ul class="nav nav-tabs" style="padding-top:20px;">
+        <li class="active"><span data-toggle="tab" data-target="#div-addonoptions"><?php echo $this->user->lang('Addon Options'); ?></span></li>
+        <li><span data-toggle="tab" data-target="#div-addonpluginsettings"><?php echo $this->user->lang('Advanced Settings'); ?></span></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="div-addonoptions">
+
+            <div class="alert alert-warning">
+            <?php echo $this->user->lang('Prices left empty will not be shown as an available option for this addon. Tick the Force checkbox below the billing period price to force showing this option even when the customer has selected a non matching billing cycle during signup.'); ?>
+            </div>
+
+            <table id="table-addonoptions" class="table table-hover">
+                <thead>
+                    <tr class="nodrag nodrop">
+                        <th style="width:13px;"></th>
+                        <th>&nbsp;<span class='tip-target' data-html="true" data-toggle="tooltip"  data-placement='right' title="<?php echo $this->user->lang("Description of the addon option displayed to customer");?>"><?php echo $this->user->lang('Option Label'); ?></span></th>
+                        <?php if ( $this->grouptype != 3) { ?>
+                        <th>&nbsp;<?php echo $this->user->lang('Monthly'); ?></th>
+                        <th>&nbsp;<?php echo $this->user->lang('Quarterly'); ?></th>
+                        <th>&nbsp;<?php echo $this->user->lang('Semiannual'); ?></th>
+                        <?php } ?>
+                        <th>&nbsp;<?php echo $this->user->lang('Annual'); ?></th>
+                        <?php if ( $this->grouptype != 3) { ?>
+                        <th>&nbsp;<?php echo $this->user->lang('2 Years'); ?></th>
+                        <?php } ?>
+                        <th>&nbsp;<?php echo $this->user->lang('Setup'); ?></th>
+                        <th class="pluginvaluecell">&nbsp;<span class='tip-target' data-html="true" data-toggle="tooltip" title="<?php echo $this->user->lang("The value sent to selected plugin when this option is selected");?>"><?php echo $this->user->lang('Plugin Value'); ?></span></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="nooption nodrag nodrop" <?php if (count($this->productAddonsPrices) > 0) {?> style="display:none;" <?php } ?>>
+                        <td colspan="10" class="nooptionsavailable"><div><?php echo $this->user->lang('No options have been defined for this addon'); ?></div>
+                    </td>
+                    </tr>
+                    <tr class="clone-addon-option" style="display:none;">
+                        <td><div class="drag-icon"></div></td>
+                        <td>
+                            <input type="text" name="optionname" style="width:110px;"><br/>
+                            <label class="checkbox inline">
+                              <input type="checkbox" name="openticket"> <span data-toggle="tooltip" title='Open ticket upon selecting this addon'><small><?php echo $this->user->lang('Open Ticket'); ?></small></span>
+                            </label>
+                        </td>
+                        <?php if ( $this->grouptype != 3) { ?>
+                        <td>
+                            <input type="text" name='price1' style="width:40px;text-align:right;"><br/>
+                            <label class="checkbox inline">
+                              <input type="checkbox" name="price1_force"> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Monthly as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="text" name='price3' style="width:40px;text-align:right;"><br/>
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="price3_force"> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Quarterly as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                            </label>
+                        </td>
+                        <td>
+                            <input type="text" name='price6' style="width:40px;text-align:right;"><br/>
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="price6_force"> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Semiannual as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                            </label>
+                        </td>
+                        <?php } ?>
+                        <td>
+                            <input type="text" name='price12' style="width:40px;text-align:right;"><br/>
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="price12_force"> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Annual as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                            </label>
+                        </td>
+                        <?php if ( $this->grouptype != 3) { ?>
+                        <td>
+                            <input type="text" name='price24' style="width:40px;text-align:right;"><br/>
+                            <label class="checkbox inline">
+                                <input type="checkbox" name="price24_force"> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected every 2 Years as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                            </label>
+                        </td>
+                        <?php } ?>
+                        <td>
+                            <input type="text" name='price0' style="width:40px;text-align:right;">
+                        </td>
+                        <td class="pluginvaluecell">
+                            <input type="text" name='plugin_var_value' style="width:50px;text-align:right;">
+                        </td>
+                        <td>
+                            <button type="button" data-candelete="1" class="close removeoption">&times;</button>
+                        </td>
+                    </tr>
+                    <?php foreach ($this->productAddonsPrices as $option) {?>
+                        <tr class="addon-option" data-new-id="0" data-addon-id="<?php echo $option['id'];?>">
+                            <td><div class="drag-icon"></div></td>
+                            <td>
+                                <input type="text" name="optionname" style="width:110px;" value="<?php echo $option['detail'];?>" placeholder=""><br/>
+                                <label class="checkbox inline">
+                                  <input type="checkbox" name="openticket" <?php if($option['openticket'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Open ticket upon selecting this addon'><small>Open Ticket</small></span>
+                                </label>
+                            </td>
+                            <?php if ( $this->grouptype != 3) { ?>
+                            <td>
+                                <input type="text" name='price1' style="width:40px;text-align:right;" value="<?php echo $option['price1'];?>"><br/>
+                                <label class="checkbox inline">
+                                  <input type="checkbox" name="price1_force" <?php if($option['price1_force'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Monthly as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                                </label>
+                            </td>
+                            <td>
+                                <input type="text" name='price3' style="width:40px;text-align:right;" value="<?php echo $option['price3'];?>"><br/>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="price3_force" <?php if($option['price3_force'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Quarterly as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                                </label>
+                            </td>
+                            <td>
+                                <input type="text" name='price6' style="width:40px;text-align:right;" value="<?php echo $option['price6'];?>"><br/>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="price6_force" <?php if($option['price6_force'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Semiannual as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                                </label>
+                            </td>
+                            <?php } ?>
+                            <td>
+                                <input type="text" name='price12' style="width:40px;text-align:right;" value="<?php echo $option['price12'];?>"><br/>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="price12_force" <?php if($option['price12_force'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected Annual as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                                </label>
+                            </td>
+                            <?php if ( $this->grouptype != 3) { ?>
+                            <td>
+                                <input type="text" name='price24' style="width:40px;text-align:right;" value="<?php echo $option['price24'];?>"><br/>
+                                <label class="checkbox inline">
+                                    <input type="checkbox" name="price24_force" <?php if($option['price24_force'] == 1) echo "checked";?>> <span data-toggle="tooltip" title='Click checkbox if you want to force showing this period for this option even if the customer has not selected every 2 Years as their selected billing period.'><small><?php echo $this->user->lang('Force'); ?></small></span>
+                                </label>
+                            </td>
+                            <?php } ?>
+                            <td>
+                                <input type="text" name='price0' style="width:40px;text-align:right;" value="<?php echo $option['price0'];?>">
+                            </td>
+                            <td class="pluginvaluecell">
+                                <input type="text" name='plugin_var_value' style="width:50px;text-align:right;" value="<?php echo $option['plugin_var_value'];?>">
+                            </td>
+                            <td>
+                                <button type="button" data-candelete="<?php echo $option['delete_ok'];?>" class="close removeoption">&times;</button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+
+            <button type="button" class="btn rich-button add-product-addon"><span><?php echo $this->user->lang('Add Option'); ?></span></button>
+
+        </div>
+        <div class="tab-pane" id="div-addonpluginsettings" style="margin-left:10px;">
+
+            <div class="alert alert-warning">
+                <?php echo $this->user->lang('Integrate this Addon with the Plugin associated to your Product, providing plugins additional instructions when setting up products based on the values selected for this addon.'); ?>
+            </div>
+
+            <label style="margin-top:10px;"><?php echo $this->user->lang("Plugin Variable");?></label>
+            <select name="pluginoption" id="pluginoption" style="width:330px;"></select><br/>
+            <div id="custompluginvariable" style="display:none;">
+                <label style="margin-top:15px;"><span data-toggle="tooltip" title='<?php echo $this->user->lang("Name to be passed to any API with the selected option value");?>.'><?php echo $this->user->lang("Variable Name");?></span></label>
+                <input type="text" id="custompluginvariable_value" style="width:317px;" />
+            </div>
+            <div style="margin-top:15px;">
+                <label id="pluginvar_description"></label>
+                <label id="pluginvar_availablein"></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <div class="pull-right">
+          <button type="submit" class="submit-addoon btn btn-primary"><?php echo $this->user->lang("Save Changes");?></button>
+        </div>
+    </div>
+    </form>
+</div>

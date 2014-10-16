@@ -1,0 +1,30 @@
+<label class="fieldlabel"><?php echo $this->user->lang("Period for TLD").": &nbsp;".$this->tld;?></label>
+<select name="product-group-period" <?php if (!$this->allowchange) echo "disabled";?> style="width:255px;" id="product-group-period">
+    <?php foreach ($this->periods as $periods) { ?>
+        <option value="<?php echo $periods['period'];?>" <?php echo ($periods['period'] == $this->period) ? "selected" : ""; ?>> <?php echo $periods['name'];?> </option>
+    <?php } ?>
+</select>
+
+<?php if ((!$this->allowchange) && ($this->period != "")) { ?>
+    <input type="hidden" name="product-group-period" value="<?php echo $this->period;?>" />
+<?php } ?>
+
+<table cellpaddin="0" cellspacing="0">
+<tr>
+<td>
+    <label class="fieldlabel" style="text-align:right;padding-right: 24px;"><?php echo $this->user->lang("Price");?></label>
+    <input class="required" type="text" style="text-align: right;width:53px;margin-right:17px;" name="product-period-price" style="padding-right:20px;" value="<?php echo $this->price;?>" />
+</td>
+<td>
+    <label class="fieldlabel" style="text-align:right;padding-right: 24px;"><?php echo $this->user->lang("Transfer");?></label>
+    <input class="required" type="text" style="text-align: right;width:53px;margin-right:17px;" name="product-period-transfer" style="padding-right:20px;" value="<?php echo $this->transfer;?>" />
+</td>
+<td>
+    <label class="fieldlabel" style="text-align:right;padding-right: 24px;"><?php echo $this->user->lang("Renew");?></label>
+    <input class="required" type="text" style="text-align: right;width:53px;margin-right:17px;" name="product-period-renew" style="padding-right:20px;" value="<?php echo $this->renew;?>" />
+</td>
+</tr>
+</table>
+<script type="text/javascript">
+    clientexec.postpageload('.richwindow');
+</script>

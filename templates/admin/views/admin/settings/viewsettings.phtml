@@ -1,0 +1,43 @@
+<?php //echo $this->settingsgroup();?>
+
+<div class="alert alert-info">
+  <div class="alert-header"><?php echo $this->settingName;?></div>
+  <p class="alert-content"><?php echo $this->settingDescription;?></p>
+</div>
+
+<?php if ($this->description != "") { ?>
+    <div class="alert alert-warning" style="width: 560px;"><?php echo $this->description;?></div>
+<?php } ?>
+
+<form id="sitesettings" name="settings" method="post" action="index.php?fuse=admin&controller=settings&action=update" autocomplete="off">
+    <input type="hidden" name="settingType" value="<?php echo $this->settingType;?>" />
+    <input type="hidden" name="pluginName" value="<?php echo $this->selectedPlugin; ?>" />
+
+    <dl class="form noborder automation-options">
+        <?php echo $this->settingsfields($this->settings);?>
+    </dl>
+
+    <button id="updatesettingbtn" class="rich-button" data-loading-text="<?php echo $this->user->lang("Saving");?>..."><span><?php echo $this->user->lang("Update Settings");?></span></button>
+
+</form>
+
+<script type="text/javascript">
+    $(function() {
+        $("#updatesettingbtn").click(function() {
+            $('#updatesettingbtn').button('loading');
+            if (check($("#sitesettings").get(0),$("#sitesettings").get(0).elements.length,false)) {
+                var contactForm = $("#sitesettings");
+                $.ajax( {
+                    url: contactForm.attr( 'action' ),
+                    type: contactForm.attr( 'method' ),
+                    data: contactForm.serialize(),
+                    success: function (){
+                        $('#updatesettingbtn').button('reset');
+                        ce.msg("Settings Updated");
+                    }
+                } );
+            }
+            return false;
+        });
+    });
+</script>

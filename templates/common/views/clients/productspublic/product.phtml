@@ -1,0 +1,79 @@
+<?php echo $this->publicproductheader($this->user);?>
+
+<style type="text/css">
+    .info {
+        font-size:14px;
+        margin-right: 20px;
+    }
+
+</style>
+
+<table width="100%">
+    <tr>
+        <td width="400" valign="top">
+            <div class="alert ce-alert ce-alert-info info">
+                <table cellpadding="3">
+                    <?php if ( $this->package['productType'] != PACKAGE_TYPE_DOMAIN ) { ?>
+                    <tr>
+                        <td align="right"><?php echo $this->user->lang('Product'); ?>:</td>
+                        <td><?php echo $this->package['product']; ?></td>
+                    </tr>
+                    <?php } ?>
+                    <tr>
+                        <td align="right"><?php echo $this->user->lang('Next Billing Date');?>:</td>
+                        <td><?php echo $this->package['nextBillDate']; ?></td>
+                    </tr>
+                    <tr>
+                        <td align="right"><?php echo $this->user->lang('Product Group'); ?>:</td>
+                        <td><?php echo $this->package['productGroup']; ?></td>
+                    </tr>
+                    <?php foreach ( $this->package['customFields'] as $customField ) { ?>
+                    <tr>
+                        <td align="right"><?php echo $customField['name']; ?>:</td>
+                        <td><?php
+                                if ($customField['value'] == "") {
+                                    echo "<span class='muted'>".$this->user->lang("Left Blank")."</span>";
+                                } else {
+                                    echo $this->escape($customField['value']);
+                                }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </table>
+            </div>
+        </td>
+        <td valign="top">
+             <div class="alert ce-alert selectedproduct-configuration-wrapper">
+
+                <h2><?php echo $this->user->lang("Your Configuration");?></h2>
+                <div id="selectedproduct-configuration">
+
+                    <div class="config-header-price">
+                        <?php
+                            if ($this->package['price'] == "") {
+                                echo "<span class='muted'>".$this->user->lang("Pricing not set")."</span>";
+                            } else {
+                                echo $this->package['price'];
+                            }
+                        ?>
+                    </div>
+
+                    <div class="config-header config-product-header"><?php echo $this->user->lang("Main Package");?><br/>
+                        <div class="config-header-data"><?php echo $this->unescape($this->package['desc']); ?></div>
+                    </div>
+
+
+                    <?php foreach ( $this->addons as $addon ) { ?>
+                    <div data-toggle="tooltip" data-html="true" title="<?php echo $addon['description']; ?>" class="config-header"><?php echo $addon['name'];?>
+                    </div>
+                    <div class="config-header-price"><?php echo $addon['selectedValue']; ?></div>
+                    <?php } ?>
+                </div>
+
+                <div  class="configuration-update-warning"></div>
+
+            </div>
+        </td>
+    </tr>
+</table>

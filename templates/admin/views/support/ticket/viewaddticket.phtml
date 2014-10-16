@@ -1,0 +1,94 @@
+<table cellpadding="5">
+    <tr>
+    <td>
+            <input type="text" name='subject' dir="auto" placeholder='Ticket title' class='required' />
+
+    </td>
+    <td>
+    <input type='hidden' data-placeholder="-- apply to ticket type" name="messagetype" id="supportticket-tickettype"></input>
+    </td>
+    </tr>
+    <tr>
+    <td colspan="2">
+    <textarea id='ticket-message' name='message' class='required' dir="auto" style='height:150px;'><?php echo $this->user->getSignatureText()? "\r\n\r\n\r\n----\r\n" . $this->user->getSignatureText() : '' ?></textarea>
+    </td>
+    </tr>
+</table>
+
+<div style="padding-left:7px;">
+    <label class="checkbox" style="padding-left:20px;">
+        <input type="checkbox" name="inNameOfUser" /> <?php echo $this->user->lang("Open ticket in the name of user"); ?>
+    </label>
+    <label class="checkbox" style="padding-left:20px;">
+        <input type="checkbox" name="notifyUser" /> <?php echo $this->user->lang("Notify user"); ?>
+    </label>
+</div>
+<input type="hidden" name="clientid" value="<?php echo $this->customer->getId(); ?>" />
+
+
+<?php if (count($this->cannedResponses['responses']) > 0) { ?>
+
+<div style="padding-left:7px;" class="btn-group btn-group-canned dropup <?php echo $canned_dropup;?>">
+    <button class="btn" type="button"><?php echo $this->user->lang("Apply Canned Reply");?></button>
+    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+    <?php foreach ($this->cannedResponses['responses'] as $response) { ?>
+        <li><a href="javascript:void(0);" onclick="updateMessage('<?php echo $response['id']; ?>');"><?php echo $this->escape($response['name']) ?></a></li>
+    <?php } ?>
+    </ul>
+</div>
+<?php }  ?>
+
+<script type="text/javascript">
+    var userSignature = '';
+    $("#supportticket-tickettype").select2({
+        minimumResultsForSearch:25,
+        width: '200px',
+        allowClear:true,
+        ajax: {
+            url: "index.php?fuse=support&action=gettickettypes&controller=tickettype&addAll=1",
+            dataType: 'json',
+            quietMillis: 0,
+            data: function () {return {}},
+            results: function (data, page) {
+                profilenotes.options = {results:[]};
+                $(data.groups).each(function(index) {
+                    if (this.ticketTypeId != -1) {
+                        name = this.ticketTypeName.toString();
+                        profilenotes.options.results.push({id:this.ticketTypeId.toString(),text:name});
+                    }
+                });
+                return profilenotes.options;
+            }
+        }
+    });
+
+    $("#supportticket-tickettype").on("open", function(){ $('.select2-drop .select2-search').css('display','none'); });
+
+    <?php if($this->user->getSignatureText()): ?>
+        userSignature = $('#ticket-message').text();
+      $('input[name=inNameOfUser]').change(function() {
+        if (this.checked) {
+          RichHTML.info(lang('If you\'re opening the ticket in the name of user, make sure you don\'t include your signature.'));
+        }
+      });
+    <?php endif ?>
+
+    function updateMessage(id)
+    {
+        RichHTML.mask();
+            $.ajax({
+            url: 'index.php?fuse=support&controller=cannedresponse&action=getcannedresponse',
+            success: function(t) {
+                RichHTML.unMask();
+                json = ce.parseResponse(t);
+                $('#ticket-message').html(json.response + userSignature);
+            },
+            data: {
+                responseid : id
+            }
+        });
+    }
+</script>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>ClientExec Login</title>
+  <link rel="Shortcut Icon" href="../favicon.ico"/>
+  <link href="../templates/admin/style/login.css" rel="stylesheet" type="text/css"/>
+  <script type="text/javascript" src="../javascript/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="../javascript/jquery.validate.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+        $("#login_form").validate({
+            invalidHandler: function(form, validator) {
+              $('#ceerrors').hide();
+              $('#cenotices').hide();
+            },
+            errorContainer: "#errorbox",
+            errorLabelContainer: "#errorbox-inside ul",
+            wrapper: "li",
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                passed_password: "required"
+            },
+            messages: {
+                email :{
+                    required: "E-Mail field may not be left blank",
+                    email: "You must enter a valid E-Mail address"
+                },
+                passed_password :{
+                    required: "Password field may not be left blank"
+                }
+            }
+        });
+
+    });
+
+ </script>
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <img src="../templates/admin/images/login/logo.png" height="262" width="257" alt="ClientExec" border="0" class="logo" />
+
+    <div id="errorbox" class="notice notice-red">
+        <div id="errorbox-inside" class="inside-notice">
+            <ul></ul>
+        </div>
+    </div>
+    <?php if (count($this->gErrorMessages)>0) { ?>
+        <div id="ceerrors" class="notice notice-red">
+            <div class="inside-notice">
+                <ul>
+                <?php foreach ($this->gErrorMessages as $message) {
+                        echo "<li>".$message."</li>";
+                } ?>
+                </ul>
+            </div>
+        </div>
+    <?php } ?>
+
+    <?php if (count($this->gMessages)>0) { ?>
+        <div id="cenotices" class="notice notice-gray">
+            <div class="inside-notice">
+                <ul>
+                <?php foreach ($this->gMessages as $message) {
+                        echo "<li>".$message."</li>";
+                } ?>
+                </ul>
+            </div>
+        </div>
+    <?php } ?>
+
+    <form class="login" id="login_form" action="index.php?fuse=admin&amp;action=Login" method="post">
+      <input name="email" id="email" type="text" placeholder="E-Mail" value="" /><br />
+      <input type="password" name="passed_password" placeholder="Password" id="passed_password" value="" />
+      <input type="submit" value="Login" class="submit" />
+      <input type="hidden" id="sessionHash" name="sessionHash" value="<?php echo $this->gHash; ?>"></input>
+    </form>
+
+    <div class="footer">Copyright &copy; 2002 - <?php echo $this->currentYear;?> <a class="celink" href="http://www.clientexec.com">ClientExec LLC</a>. All Rights Reserved.</div>
+
+  </div>
+
+</body>
+
+</html>

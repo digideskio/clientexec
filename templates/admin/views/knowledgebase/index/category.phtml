@@ -1,0 +1,43 @@
+<table width="100%">
+<tr>
+<td>
+	<label><strong><?php echo $this->user->lang('Name'); ?></strong></label>
+</td>
+<td>
+	<label><strong><?php echo $this->user->lang('Order'); ?></strong></label>
+</td>
+</tr>
+<tr>
+<td>
+	<input type='text' style="width: 330px;" class='required' id='title' name='title' value='<?php echo $this->name;?>' />
+</td>
+<td>
+	<input type='text' style="width:40px;" class='required' id='my_order' name='my_order' value='<?php echo $this->my_order;?>' />
+</td>
+</tr>
+</table>
+<br/>
+<label><strong><?php echo $this->user->lang('Description'); ?></strong></label>
+<textarea name='description' style='height:80px;'><?php echo $this->description;?></textarea>
+<br/><br/>
+<label class="checkbox inline">
+	<input type="checkbox" name="staffonly" value="1" <?php if ($this->staffonly == 1) { ?>checked="checked"<?php }?>> <?php echo $this->user->lang("Staff Only"); ?>
+</label>
+<label class="checkbox inline">
+	<input type="checkbox" id="is_series" name="is_series" value="1" <?php if ($this->is_series == 1) { ?>checked="checked"<?php }?>> <span class="tip-target" data-toggle="tooltip" data-html="true" title="<?php echo $this->user->lang("Articles in this category will contain footer links to the next article in the series."); ?>"><?php echo $this->user->lang("Treat as a series"); ?></span>
+</label>
+<label class="checkbox inline" id="is_global_series" style="display:none;">
+	<input type="checkbox" name="is_global_series" value="1" <?php if ($this->is_global_series == 1) { ?>checked="checked"<?php }?>> <span class="tip-target" data-toggle="tooltip" data-html="true" title="<?php echo $this->user->lang("If checked this category will be listed with all other global series in a sidebar navigation UI.  This allows presentation of your global series together."); ?>"><?php echo $this->user->lang("Global series?"); ?></span>
+</label>
+<script type="text/javascript">
+	if ($('#is_series:checked').val() == 1) {
+		$('#is_global_series').show();
+	}
+	$('#is_series').on('change',function(){
+		if ($('#is_series:checked').val() == 1) {
+			$('#is_global_series').show();
+		} else {
+			$('#is_global_series').hide();
+		}
+	});
+</script>

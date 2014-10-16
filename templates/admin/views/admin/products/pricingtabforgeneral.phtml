@@ -1,0 +1,140 @@
+<div class="fieldwrapper">
+
+    <form id="pricingtab">
+        <table class="table table-striped" cellpadding="5" cellspacing="5" style="width:100%">
+            <thead>
+            <tr>
+                <td width="150">
+                </td>
+                <td width="50">
+                    <label style="text-align:center;font-weight:bold;" class="fieldlabel"><?php echo $this->user->lang("Price");?></label>
+                </td>
+                <td width="50">
+                    <label style="text-align:center;font-weight:bold;" class="fieldlabel"><?php echo $this->user->lang("Setup");?></label>
+                </td>
+                <td>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Monthly");?>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->priceMonthly;?>" name="priceMonthly" style="width:50px;"/>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->setupMonthly;?>" name="setupMonthly" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="priceMonthly_checked" value="1" <?php if ($this->priceMonthly_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Quarterly");?>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->priceQuarterly;?>" name="priceQuarterly" style="width:50px;"/>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->setupQuarterly;?>" name="setupQuarterly" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="priceQuarterly_checked" value="1" <?php if ($this->priceQuarterly_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Semi-Annual");?>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->priceSemiannual;?>" name="priceSemiannual" style="width:50px;"/>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->setupSemiannual;?>" name="setupSemiannual" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="priceSemiannual_checked" value="1" <?php if ($this->priceSemiannual_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Annual");?>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->priceYearly;?>" name="priceYearly" style="width:50px;"/>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->setupAnnual;?>" name="setupAnnual" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="priceYearly_checked" value="1" <?php if ($this->priceYearly_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Two Years");?>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->price2Years;?>" name="price2Years" style="width:50px;"/>
+                </td>
+                <td>
+                    <input type="text" value="<?php echo $this->setupBiennial;?>" name="setupBiennial" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="price2Years_checked" value="1" <?php if ($this->price2Years_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("One-Time");?>
+                </td>
+                <td colspan="2">
+                    <input type="text" value="<?php echo $this->onetime;?>" name="onetime" style="width:50px;"/>
+                </td>
+                <td>
+                    <label class="checkbox inline"><input type="checkbox" name="priceOneTime_checked" value="1" <?php if ($this->priceOneTime_checked == 1) echo "checked";?> /><?php echo $this->user->lang("Allow in signup?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?php echo $this->user->lang("Late Fee");?>
+                </td>
+                <td colspan="3">
+                    <input type="text" value="<?php echo $this->latefee;?>" name="latefee" style="width:50px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label class="checkbox inline"><input type="checkbox" name="taxable" value="1" <?php if ($this->taxable == 1) echo "checked";?> /><?php echo $this->user->lang("Product is Taxable?");?></label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label class="fieldlabel"><span class='tip-target' data-toggle="tooltip"  data-placement="right" title='Enter an existing Coupon Code to have the coupon automatically applied during checkout.'><?php echo $this->user->lang("Automatic Coupon");?></span></label>
+                    <input type="text" name="automaticCoupon" value="<?php echo $this->automaticCoupon;?>" style="width:200px;"/>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4" style="border-top: 0px;">
+
+                    <div class="alert alert-block">
+                    Addon prices for billing cycles not used in this product will not be available to the customer, unless you select the force show option in the addon setup screen.
+                    </div>
+
+                    <div class="form-actions">
+                        <div class="pull-right">
+                          <button type="submit" class="submit-pricing btn btn-primary"><?php echo $this->user->lang("Save Changes");?></button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>

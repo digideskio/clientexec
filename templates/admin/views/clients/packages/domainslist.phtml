@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    var packages = packages || {};
+    packages.config = {
+        customFields: <?php echo html_entity_decode($this->customfields) ?>
+    }
+</script>
+<div class="alert alert-info">
+  <div class="alert-header"><?php echo $this->user->lang("Domain Package List");?></div>
+  <p class="alert-content"><?php echo $this->user->lang("List of your customer's Domain packages.");?></p>
+</div>
+
+<?php
+if ( $this->showWarning == 0 ) { ?>
+<div class="notice notice-red">
+    <span class="bold-item"><?php echo $this->user->lang('Notice'); ?>:</span>&nbsp;<?php echo $this->user->lang('The domain updater service is currently turned off.  Some information may be out of date.'); ?>&nbsp;&nbsp;<a href="index.php?fuse=admin&controller=settings&settings=plugins_services&type=Services&view=plugins&setting=domainupdater"><?php echo $this->user->lang('Click here to turn the service on.'); ?></a>
+</div>
+<?php } ?>
+<span class="grid-meta" id="packages-grid-metadata"></span>
+<div id="gridheader" class="blue-box" style="clear:both;padding:4px !important;">
+    <table class="automation">
+        <tbody>
+            <tr>
+               <td align="right"><?php echo $this->user->lang('Package Type Filter'); ?>:&nbsp;</td>
+                <td align="left" width="50">
+                    <select onchange="togglePackageListType(this.options[this.selectedIndex].value);" style='width:150px;'>
+                        <option value="hosting"><?php echo $this->user->lang('Hosting Packages'); ?></option>
+                        <option value="domain" selected="selected"><?php echo $this->user->lang('Domain Packages'); ?></option>
+                        <option value="general"><?php echo $this->user->lang('General Packages'); ?></option>
+                        <option value="ssl"><?php echo $this->user->lang('SSL Packages'); ?></option>
+                    </select>
+                </td>
+                <td align="right" width="110"><?php echo $this->user->lang('Package Filter'); ?>:&nbsp;</td>
+                <td align="left" width="80">
+                    <select id="packages-grid-package-filter" style='width:175px;'>
+                        <option value="active"><?php echo $this->user->lang('Active Domains'); ?></option>
+                        <option value="all"><?php echo $this->user->lang('All Domains'); ?></option>
+                        <option value="pending"><?php echo $this->user->lang('Pending Domains'); ?></option>
+                        <option value="expired"><?php echo $this->user->lang('Expired Domains'); ?></option>
+                        <option value="30days"><?php echo $this->user->lang('Expires within 30 Days'); ?></option>
+                        <option value="15days"><?php echo $this->user->lang('Expires within 15 Days'); ?></option>
+                        <option value="tomorrow"><?php echo $this->user->lang('Expires Tomorrow'); ?></option>
+                        <option value="today"><?php echo $this->user->lang('Expires Today'); ?></option>
+                    </select>
+                </td>
+                <td align="right" style="width:80px"><?php echo $this->user->lang('Display'); ?>: &nbsp;&nbsp;</td>
+                <td align="left" style="width:60px">
+                    <select id='packages-grid-filter' class="change-grid-showrecords" style='width:60px;'>
+                        <option value='5'>5</option>
+                        <option value='10'>10</option>
+                        <option value='25'>25</option>
+                        <option value='50'>50</option>
+                        <option value='150'>150</option>
+                        <option value='300'>300</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="packages-grid"></div>
+<div id="packages-grid-footer" style="display:none;">
+    <button class="rich-button" id="btn-send-reminder">
+        <span><?php echo $this->user->lang("Send Reminder"); ?></span>
+    </button>
+</div>
+<!--
+<div class="table-summary-notice" style="margin-bottom: 10px; margin-top: 10px;">
+    <?php echo $this->user->lang('When you delete a domain from ClientExec an attempt will be made to disable automatic renewal of the domain at the registrar.');?><br/>
+</div>
+-->
